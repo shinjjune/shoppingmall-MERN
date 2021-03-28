@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import {Typography, Button, Form, Input } from 'antd';
 import FileUpload from '../../utils/FileUpload'
+import Axios from 'axios';
 
 const {TextArea }= Input;
 
@@ -17,13 +18,13 @@ const Continents = [
 
 
 
-function UploadProductPage() {
+function UploadProductPage(props) {
 
     const [Title, setTitle] = useState("")
     const [Description, setDescription] = useState("")
     const [Price, setPrice] = useState(0)
     const [Continent, setContinent] = useState(1)
-    const [Iamges, setImages] = useState([])
+    const [Images, setImages] = useState([])
 
 
     const titleChangeHandler =(event) => {
@@ -42,6 +43,36 @@ function UploadProductPage() {
     const updateImages = (newImages) =>{
         setImages(newImages)
     }
+    const submitHandler = (event) =>{
+        event.preventDefault();
+
+        if(!Title || !Description || !Price || !Continent || !Images) {
+            return alert("모든 값을 넣어주세요")
+        }
+
+        // 서버에 채운 값들을 request 로 보낸다.
+
+        const body = {
+            // 로그인 된 사람의 ID
+            writer: props.user.userData._id,
+            title: Title,
+            description : Description,
+            price : Price,
+            images: Images,
+            coninents: Continent
+        }
+
+        Axios.post("/api/product",body)
+            .then(response => {
+                if(response.data.success){
+                    alert("상품 업로드 성공!!!")
+                    props.history.push('/')
+                }
+                else{
+                    alert("업로드 실패ㅠ")
+                }
+            })
+    }
 
 
     return (
@@ -51,12 +82,12 @@ function UploadProductPage() {
             </div>
 
 
-            <Form>
+            <Form onSubmit={submitHandler}>
                 {/* DropZone */}
 
                 <FileUpload refreshFunction={updateImages}/>
 
-                
+
                 <br />
                 <br />
                 <label>이름</label>
@@ -81,7 +112,7 @@ function UploadProductPage() {
 
                 <br />
                 <br />
-                <Button>
+                <Button htmlType="submit">
                     확인
                 </Button>
 
