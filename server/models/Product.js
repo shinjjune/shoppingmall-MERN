@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const productSchema = mongoose.Schema({
     writer : {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User'
     },
     title: {
@@ -35,6 +35,16 @@ const productSchema = mongoose.Schema({
         default :0
     }
 }, {timestamps: true})
+
+productSchema.index({
+    title :'text',
+    description:'text',
+}, {
+    weight:{
+        title :5,
+        description:1
+    }
+})
 
 const Product = mongoose.model('Product', productSchema);
 
