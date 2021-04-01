@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import ImageGallery from 'react-image-gallery';
+
 function ProductImage(props) {
 
     const [Images, setImages] = useState([])
@@ -15,8 +16,6 @@ function ProductImage(props) {
             })
             setImages(images)
         }
-
-
 
     }, [props.detail])
 
